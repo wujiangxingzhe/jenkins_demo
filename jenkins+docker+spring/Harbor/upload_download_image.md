@@ -2,52 +2,66 @@
 
 **不管是上传还是下载镜像，都需要将Harbor地址添加到docker的信任列表，同时登录Harbor**
 
-## 1. 上传镜像
+## 创建Project
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+
+## 2. 创建用户
+jerry/Jerry12345
+
+![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+## 3. 将用户绑定到创建的Project
+
+![alt text](image-5.png)
+
+![alt text](image-6.png)
+
+## 3. 上传镜像
 
 ### 1.1 给镜像打上标签
 ···
-docker tag eureka:v1 192.168.66.120:85/tensquare/eureka:v1
+docker tag alpine:latest 192.168.50.120/harbor-demo/alpine:v1
 ···
 
-### 1.2 登录Harbor
-> docker login -u 用户名 -p 密码 192.168.66.120:85
-
-### 1.3 推送镜像
-```
-docker push 192.168.66.120:85/tensquare/eureka:v1
-```
-The push refers to repository [192.168.66.120:85/tensquare/eureka]
-Get https://192.168.66.120:85/v2/: http: server gave HTTP response to HTTPS client
-
-* 这时会出现以上报错，是因为Docker没有把Harbor加入信任列表中
-
-### 1.4 把Harbor地址加入到Docker信任列表
+### 1.2 把Harbor地址加入到Docker信任列表
 > vi /etc/docker/daemon.json
 ```
 {
     "registry-mirrors": ["https://zydio188.mirror.aliyuncs.com"],
-    "insecure-registries": ["192.168.66.120:85"]
+    "insecure-registries": ["192.168.66.120"]
 }
 ```
-需要重启Docker，重新推送即可
-
-
-## 2. 下载镜像
-* 从另外的机器上下载镜像
-* 下载镜像也需要先登录
-
-### 2.1 修改Docker配置，添加Harbor地址到docker信任列表
-> vi /etc/docker/daemon.json
+* 需要重启Docker，重新推送即可
+* 解决如下问题, docker login强制https的问题
 ```
-{
-    "registry-mirrors": ["https://zydio188.mirror.aliyuncs.com"],
-    "insecure-registries": ["192.168.66.120:85"]
-}
+# docker login -u jerry http://192.168.50.120
+Password: 
+Error response from daemon: Get "https://192.168.50.120/v2/": dial tcp 192.168.50.120:443: connect: connection refused
 ```
-重启docker
 
-### 2.2 先登录，再从Harbor下载镜像
+### 1.3 登录Harbor
 ```
-docker login -u 用户名 -p 密码 192.168.66.102120:85
-docker pull 192.168.66.120:85/tensquare/eureka:v1
+docker login -u jerry http://192.168.50.120
+```
+* 输入密码即可登录
+
+
+### 1.4 推送镜像
+```
+docker push 192.168.50.120/harbor-demo/alpine:v1
+```
+
+![alt text](image-7.png)
+
+
+## 4. 下载镜像
+```
+docker rmi 192.168.50.120/harbor-demo/alpine:v1
+docker pull 192.168.50.120/harbor-demo/alpine:v1
 ```
