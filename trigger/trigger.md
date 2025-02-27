@@ -110,7 +110,7 @@ H H(9-16)/2 * * 1-5
 * 添加Webhooks并测试
 ![alt text](image-14.png)
 
-* 当测试时，会报403的问题；这是因为在配置secret
+* 当测试时，会报403的问题；这是因为需要配置secret
 ![alt text](image-15.png)
 
 * 临时解决方案，在Jenkins中关闭对http://192.168.50.135:8080/**project**/web-pipeline-demo的认证

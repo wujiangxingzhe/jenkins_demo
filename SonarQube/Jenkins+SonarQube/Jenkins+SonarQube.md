@@ -199,6 +199,7 @@ pipeline {
 ```
 
 * 增加了如下内容
+
 ![alt text](image-15.png)
 
 * 配置中的`sonarqube-demo`来自哪里

@@ -77,32 +77,3 @@ hostname: 192.168.50.120
 ### 4.2 验证安装
 通过浏览器访问harbor.yml中配置的IP和端口，用户名和密码是admin/Harbor12345
 ![alt text](image.png)
-
-
-## 6. 上传压缩包到linux，并解压
-```
-tar -xzf harbor-offline-installer-v1.9.2.tgz
-mkdir /opt/harbor
-mv harbor/* /opt/harbor
-cd /opt/harbor
-```
-
-## 7. 修改Harbor的配置
-> vi harbor.yml
-修改hostname和port
-```
-hostname: 192.168.66.120
-port: 85
-```
-
-## 8. 安装Harbor
-```
-./prepare
-./install.sh
-```
-
-## 9. 启动Harbor
-```
-docker-compose up -d  # 启动
-docker-compose stop  # 停止
-```
