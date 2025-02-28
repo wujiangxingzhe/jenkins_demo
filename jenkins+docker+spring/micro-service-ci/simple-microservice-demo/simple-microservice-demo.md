@@ -270,54 +270,6 @@ pipeline {
             }
         }
     }
-}
-```
-
-### 5.4 验证
-* build log
-
-![alt text](image-10.png)
-
-* 镜像上传到Harbor
-
-![alt text](image-11.png)
-
-
----
-### 1.5 配置Jenkinsfile
-```
-pipeline {
-    agent any
-
-    stages {
-        stage('Checkout code') {
-            steps {
-                checkout scmGit(branches: [[name: '*/${branch}']], extensions: [], userRemoteConfigs: [[credentialsId: 'root-sshkey', url: 'git@192.168.50.130:jenkins/jenkins-java-freestyle.git']])
-            }
-        }
-        stage('Review code') {
-            steps {
-                script {
-                    // 引入SonarQubeScanner工具
-                    scannerHome = tool 'sonarqube-demo'
-                }
-                // 引入SonarQube的服务器环境
-                withSonarQubeEnv('sonarqube-server') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }
-            }
-        }
-        stage('Build project') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-        stage('Deploy project') {
-            steps {
-                deploy adapters: [tomcat9(credentialsId: 'tomcat_auth', path: '', url: 'http://192.168.50.120:8080/')], contextPath: null, war: 'target/*.war'
-            }
-        }
-    }
     post {
         always {
             emailext(
@@ -329,6 +281,15 @@ pipeline {
     }
 }
 ```
+
+### 5.4 验证
+* build log
+
+![alt text](image-10.png)
+
+* 镜像上传到Harbor
+
+![alt text](image-11.png)
 
 
 ---
