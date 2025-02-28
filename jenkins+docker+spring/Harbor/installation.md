@@ -75,5 +75,26 @@ hostname: 192.168.50.120
 ```
 
 ### 4.2 验证安装
+```
+docker-compose ps
+```
 通过浏览器访问harbor.yml中配置的IP和端口，用户名和密码是admin/Harbor12345
 ![alt text](image.png)
+
+### 4.3 开机启动
+> vi /etc/systemd/system/harbor.service
+```
+[Unit]
+Description=Harbor Registry
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/harbor/install.sh start
+ExecStop=/opt/harbor/install.sh stop
+ExecReload=/opt/harbor/install.sh restart
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+```
